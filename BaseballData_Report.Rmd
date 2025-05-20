@@ -1,0 +1,272 @@
+---
+title: "Baseball Data - Report"
+output:
+  pdf_document: default
+  html_document: default
+date: "2025-05-18"
+editor_options: 
+  markdown: 
+    wrap: 50
+---
+
+#Q1
+
+1.  How many teams are there in the database? how
+    many teams are there in 2022? List the names
+    of the teams for 2022, including the league
+    and division they are in and how many games
+    they won and lost in that year. Group the
+    results by league, division and then by games
+    won. <br>
+2.  ![Part 1 and Part 2
+    results](Pictures/Screenshot%202025-05-17%20at%209.49.07%20PM.png){width="301"}![Part
+    3
+    results](Pictures/Screenshot%202025-05-17%20at%209.49.29%20PM.png){width="210"}
+3.  Judging by the results, while there are 149
+    total teams in the database, there are only 30
+    teams in 2022. These specific teams have their
+    statistics shown within Part C.
+4.  For Part A, I counted all unique team IDs to
+    ensure that I did not count repeats--This
+    decision allowed all of my answers to
+    represent the correct amount of teams.
+
+#Q2
+
+1.  What are the 10 teams that had the highest
+    average attendance since 2015? Give the name
+    and the average and total attendance for this
+    period for each time?
+
+2.  
+
+    ![Question 2
+    results](Pictures/Screenshot%202025-05-17%20at%209.56.15%20PM.png){width="350"}
+
+3.  These results show the teams, since 2015, that
+    have the top 10 attendance. As seen, the Los
+    Angeles Dodgers have the highest attendance.
+
+4.  The main thing that I did was grouping by
+    teamID, as this allowed answers to be
+    generated according to each specific teamID. I
+    used AVG() and SUM() to calculate the needed
+    attendance values, I ordered by avg_attendance
+    in descending order to get the highest average
+    attendances first, and then I used LIMIT 10 to
+    get only the results with the top 10 average
+    attendances.
+
+<br><br><br><br><br>
+
+#Q3
+
+1.  Who are the 10 people that had the "longest"
+    career, i.e., spans the largest number of
+    years? Who are the 10 people that played the
+    most number of games?
+
+2.   ![Question 3
+    results](Pictures/Screenshot%202025-05-17%20at%2010.05.08%20PM.png){width="172"}![Question
+    3 (Part 2)\'s
+    results](Pictures/Screenshot%202025-05-17%20at%2010.12.16%20PM.png){width="167"}
+
+3.   These results show the players with the
+    longest careers--The longest appearing to have
+    lasted 27 years. I also found who played the
+    most number of games--The largest number was
+    3562 games.
+
+4.  For Part1:I counted distinct yearIDs to ensure
+    that I was not counting duplicates. I grouped
+    by playerID to get a result for each playerID;
+    I then ordered my results by years_played (in
+    descending order), before using LIMIT 10 to
+    get the top 10 years_played values. This
+    showed me who had the longest career.
+
+    For Part 2:I used an approach similar to my
+    approach in Part 1, except that I ordered by
+    total_games---This allowed me to find the
+    players with the largest total_games values,
+    which allowed me to answer the second part of
+    question 3.
+
+<br><br><br><br><br>
+
+#Q4
+
+1.  Compute which team won the world series in
+    2022? Include the team name, league, division,
+    number of games won and lost during the
+    season, and the total number of games in the
+    world series.
+
+2.   ![Question 4\'s
+    result](Pictures/Screenshot%202025-05-17%20at%2010.13.59%20PM.png){width="259"}
+
+3.  Judging by this result, the Houston Astros won
+    the world series in 2022.
+
+4.   I selected the necessary variables from the
+    Teams table, where I knew I could find the
+    needed information. I specifically looked for
+    where WSWin was 'Y' (indicating that a team
+    had won the world series) and where yearID
+    was 2022. This allowed me to find the team
+    that won in 2022.
+
+<br><br><br><br><br>
+
+#Q5
+
+1\. Compute the winner and the loser of the world
+series for all years. Include the team name,
+league, division, number of games won and lost
+during the season for both the winning and the
+losing team.
+
+2.   ![Question 5\'s
+    result](Pictures/Screenshot%202025-05-17%20at%2010.19.09%20PM.png){width="324"}
+3.  When examining this table, we can see which
+    teams won or lost the world series at
+    different times. For instance, we can see that
+    the Baltimore Orioles lost the 1884 world
+    series, while the Providence Grays won.
+4.   I selected the necessary variables from the
+    Teams table, where I knew I could find the
+    needed information. I grouped by yearID and
+    WSWin to ensure that I received unique answers
+    for both variables, which allowed me to find
+    which teams won and lost the world series at
+    different times.
+
+<br><br><br><br><br>
+
+#Q6
+
+1.  Compute the total payroll for each team for
+    each year. Plot these. **Bonus: In the SQL
+    query, also compute whether the team won or
+    lost the world series for that year and add
+    that to the plot.**
+
+```{=html}
+<!-- -->
+```
+2.  plotData = dbGetQuery(db, "SELECT Teams.name,
+    SUM(Salaries.salary) AS payroll,
+    Salaries.yearID, WSWin FROM Salaries LEFT JOIN
+    Teams ON Salaries.teamID = Teams.teamID AND
+    Salaries.yearID = Teams.yearID GROUP BY
+    Salaries.teamID, Salaries.yearID ORDER BY
+    Salaries.teamID ;")
+
+3.   ![Question 6\'s
+    results](Pictures/Screenshot%202025-05-17%20at%2010.48.09%20PM.png){width="237"}
+    ![Question 6\'s
+    plot.](Pictures/Screenshot%202025-05-17%20at%2010.49.21%20PM.png){width="228"}
+
+4.  The output shows how, per year, each team had
+    a different payroll amount, along with other
+    information.
+
+#Q7
+
+1.  What are the 10 colleges/universities that
+    have produced the most players in MLB since
+    2000? Give the college name, city and state
+    and the number of players they have produced
+    in this time period.
+2.  View(dbGetQuery(db, "SELECT Schools.name_full,
+    Schools.city, Schools.state, COUNT(DISTINCT
+    CollegePlaying.playerID) as num_of_players
+    FROM Schools INNER JOIN CollegePlaying ON
+    Schools.schoolID = CollegePlaying.schoolID
+    WHERE yearID \>= 2000 GROUP BY name_full ORDER
+    BY num_of_players DESC LIMIT 10;"))
+3.   ![Question 7
+    results](Pictures/Screenshot%202025-05-17%20at%2010.54.06%20PM.png){width="301"}
+4.  This shows the schools with the most
+    players---Cal State University Long Beach is
+    at the top.
+
+<br><br><br><br><br>
+
+#Q8
+
+1.  How many all-star games are there each year?
+    How many players are there in each all-star
+    game(s) each year?
+2.   ![Question 8\'s
+    results](Pictures/Screenshot%202025-05-17%20at%2010.24.13%20PM.png){width="264"}
+3.  These results show how all-star games occur
+    each year, and how many players are in each.
+    For instance, in 1933, 1 all-star game
+    occurred and featured 36 players.
+4.  I collected the necessary information from the
+    AllstarFull table, being sure to count only
+    unique gameID values to avoid duplication. I
+    grouped by yearID to get results for each
+    yearID\--This allowed me to receive the number
+    of all-star games and the number of players
+    per year.
+
+<br><br><br><br><br>
+
+#Q9
+
+1.  Consider players who have appeared in at least
+    15 all-star games. How many all-star games
+    have they played in? Give the players' names,
+    teams and years for each year, in which they
+    were in the all-star games, and the first and
+    last year they were in an all-star game.
+2.   ![Question 9\'s
+    results](Pictures/Screenshot%202025-05-17%20at%2010.30.55%20PM.png){width="453"}
+3.  These results show stats for players who
+    played in at least 15 all-star games, allowing
+    us to see their specific playerIDs and and
+    other information.
+4.  I extracted the necessary information, while
+    using GROUP_CONCAT to collect unique teamIDs
+    and yearIDs into a list, per playerID. After
+    having using GROUP BY, I used HAVING to ensure
+    that all players had played in at least 15
+    all-star games. All of this allowed me to find
+    the players who played in at least 15 all-star
+    games and relevant information about them.
+
+<br><br><br><br><br>
+
+#Q10
+
+1.  Find the 10 players who have appeared in the
+    most number of years in the playoffs. This is
+    the number of years, not the total number of
+    playoff games they were in. Return the table
+    with the person's name, number of years they
+    have been in the playoffs, the first and last
+    year they appeared in the playoffs, and the
+    number of different teams they appeared for in
+    the playoffs.
+
+2.   ![Question 10\'s
+    result](Pictures/Screenshot%202025-05-17%20at%2010.39.21%20PM.png){width="384"}
+
+3.  These results show the players who appeared in
+    the most number of years in the playoffs--As
+    we can see, two players are tied for first
+    place, both having played 16 different years
+    in the playoffs.
+
+4.  I extracted all of the information I needed by
+    using UNION to join the BattingPost,
+    FieldingPost, and PitchingPost tables on the
+    values that I needed. I counted only distinct
+    teamIDs to ensure that I wasn't counting
+    duplicates. I grouped by playerID values,
+    ordered by number_of_playoff_years and used
+    LIMIT 10 to get the rows corresponding to the
+    top 10 number_of_playoff_years values. Thus, I
+    was able to answer the question.
